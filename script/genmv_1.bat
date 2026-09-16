@@ -1,4 +1,5 @@
 @echo off
+set "PATH=%PATH%;C:\Program Files\Oracle\VirtualBox"
 set NOM_VM=Debian1
 
 echo Creation de la VM %NOM_VM%...
