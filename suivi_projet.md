@@ -1,16 +1,14 @@
 # Journal de bord
 
-(remplacer les items en majuscule)
-
-* TITRE PROJET
-* NOM CHEF DE PROJET
-* NOMS AUTRE MEMBRES EQUIPE
-* DATE DEBUT
+* SAE 51 Automatisation de la creation de machines
+* Andy & Tom
+* Andy, Tom
+* 16/09/2026
 
 
 ## Séance n° 1
 
-* date - heure
+* 16/09/2026 - 13h-16h
 * Travail effectué
 * A faire à la prochaine séance
 * Difficultés rencontrées
