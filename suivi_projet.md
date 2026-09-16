@@ -9,10 +9,10 @@
 ## Séance n° 1
 
 * 16/09/2026 - 13h-16h
-* Travail effectué
-* A faire à la prochaine séance
-* Difficultés rencontrées
-* Remarques sur la séances (membre absent, pbe technique, ...)
+* Travail effectué : mise en place des 5 scripts + début du rapport
+* A faire à la prochaine séance : finaliser le rapport + commencer la diapo, régler les problemes de l'étape 5
+* Difficultés rencontrées : probleme de chemin concernant VBoxManage.exe, impossible pour la VM de boot car la VM ne trouvent pas les fichiers concernés
+* Remarques sur la séances (membre absent, pbe technique, ...) : aucune
 
 
 ## Séance n° 2
