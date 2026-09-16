@@ -51,27 +51,24 @@ VBoxManage storageattach %NOM_VM% --storagectl "SATA" --port 0 --device 0 --type
 VBoxManage setextradata %NOM_VM% "CreationDate" "%DATE% %TIME%"
 VBoxManage setextradata %NOM_VM% "Creator" "%USERNAME%"
 
-:: Configuration du boot réseau PXE en priorité 1 (Nouveauté concernant l'étape 5)
+:: Configuration TFTP PXE (V5)
 VBoxManage modifyvm %NOM_VM% --boot1 net
-echo VM %NOM_VM% creee avec succes (PXE configure en boot1).
-goto :eof
+VBoxManage modifyvm %NOM_VM% --nattftpprefix1 "C:\TFTP\"
+VBoxManage modifyvm %NOM_VM% --nattftpfile1 "pxelinux.0"
+:: Ligne clé qui force EnableTFTP à 1 sous Windows :
+VBoxManage modifyvm %NOM_VM% --nattftpbootdrive1 1
 
-:supprimer
-echo Suppression de la VM %NOM_VM%...
-VBoxManage unregistervm %NOM_VM% --delete
-if ERRORLEVEL 1 (
-    echo Echec de la suppression de la VM %NOM_VM%.
-    exit /B 1
-)
+echo VM %NOM_VM% creee avec succes.
 goto :eof
 
 :demarrer
 echo Demarrage de la VM %NOM_VM%...
 VBoxManage startvm %NOM_VM%
-if ERRORLEVEL 1 (
-    echo Echec du demarrage de la VM %NOM_VM%.
-    exit /B 2
-)
+goto :eof
+
+:supprimer
+echo Suppression de la VM %NOM_VM%...
+VBoxManage unregistervm %NOM_VM% --delete
 goto :eof
 
 :arreter
