@@ -2,5 +2,5 @@
 
 Bienvenue sur le dépôt du projet.
 
-📄 **Le rapport complet et le manuel d'utilisation sont disponibles dans le document :**  
-👉 **[Accéder au fichier usage.md](./usage.md)**
+ **Le rapport complet et le manuel d'utilisation sont disponibles dans le document :**  
+--> **[Accéder au fichier usage.md](./usage.md)**
