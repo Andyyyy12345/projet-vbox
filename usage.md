@@ -97,8 +97,10 @@ Cependant, la mise en place du serveur TFTP interne de VirtualBox (associé à l
 
   <img width="1123" height="561" alt="a7a1c654-a36a-4c5f-95c3-01db514a28e3" src="https://github.com/user-attachments/assets/a24d2f18-f5a1-4c81-86f1-097c8c10ede2" />
 
+Avec toutes ces erreurs corrigées, nous avons donc réussi à faire boot la VM : 
 
-  
+  <img width="1254" height="708" alt="image" src="https://github.com/user-attachments/assets/6fc353ab-0cb8-4abd-9e46-8921c26f2a4c" />
+
 
 ## Fonctionnalités supplémentaires (Partie optionnelle)
 ### 1. Login automatique (Auto-logon)
