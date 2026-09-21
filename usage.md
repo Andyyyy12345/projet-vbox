@@ -29,7 +29,7 @@ Les scripts doivent être exécutés depuis l'invite de commandes Windows (cmd.e
 Syntaxe générale (à partir de la v3)
 genmv_5.bat [ACTION] [NOM_MACHINE]
 
-Actions disponibles :
+### Actions disponibles :
 
 L : Liste l'ensemble des machines virtuelles enregistrées sur l'hôte et affiche leurs métadonnées associées.
 
@@ -41,7 +41,7 @@ D [nom] : Démarre la machine virtuelle.
 
 A [nom] : Arrête immédiatement la machine virtuelle (poweroff).
 
-Exemples d'utilisation :
+### Exemples d'utilisation :
 ```
 # Lister les machines et leurs métadonnées
 cmd //c genmv_5.bat L
@@ -58,15 +58,15 @@ cmd //c genmv_5.bat S Debian1
 ```
 ## Choix d'implémentation et évolutions des scripts
 
-genmv_1.bat : Implémentation du socle de base (création, allocation de 4 Go RAM, création et attachement d'un disque SATA de 64 Go). Une pause finale permet de vérifier l'ajout dans l'interface graphique VirtualBox.
+**genmv_1.bat :** Implémentation du socle de base (création, allocation de 4 Go RAM, création et attachement d'un disque SATA de 64 Go). Une pause finale permet de vérifier l'ajout dans l'interface graphique VirtualBox.
 
-genmv_2.bat : Ajout d'un contrôle d'existence préalable via la commande VBoxManage showvminfo %NOM_VM% et le test de %ERRORLEVEL% afin d'éviter d'écraser une VM existante.
+**genmv_2.bat :** Ajout d'un contrôle d'existence préalable via la commande VBoxManage showvminfo %NOM_VM% et le test de %ERRORLEVEL% afin d'éviter d'écraser une VM existante.
 
-genmv_3.bat : Passage à une architecture non-interactive basée sur des arguments positionnels (L, N, S, D, A). Centralisation de la mémoire vive (RAM=4096) et de la taille disque (DISK=65536) sous forme de variables d'en-tête.
+**genmv_3.bat :** Passage à une architecture non-interactive basée sur des arguments positionnels (L, N, S, D, A). Centralisation de la mémoire vive (RAM=4096) et de la taille disque (DISK=65536) sous forme de variables d'en-tête.
 
-genmv_4.bat : Injection de métadonnées personnalisées lors de la création (CreationDate et Creator) via setextradata. Parsing de la liste des VM à l'aide d'un fichier texte temporaire (liste_temp.txt) parcouru par une boucle FOR /F pour afficher les métadonnées de chaque machine.
+**genmv_4.bat :** Injection de métadonnées personnalisées lors de la création (CreationDate et Creator) via setextradata. Parsing de la liste des VM à l'aide d'un fichier texte temporaire (liste_temp.txt) parcouru par une boucle FOR /F pour afficher les métadonnées de chaque machine.
 
-genmv_5.bat : Configuration du démarrage réseau PXE en priorité 1 via l'option modifyvm %NOM_VM% --boot1 net.
+**genmv_5.bat :** Configuration du démarrage réseau PXE en priorité 1 via l'option modifyvm %NOM_VM% --boot1 net.
 
 ## Problèmes rencontrés, limites & Astuces techniques
 
@@ -77,7 +77,7 @@ L'outil VBoxManage.exe n'étant pas toujours inscrit dans la variable d'environn
 set "PATH=%PATH%;C:\Program Files\Oracle\VirtualBox"
 ```
 ### 2. Implémentation du boot réseau PXE et limites du serveur TFTP interne
-Pour l'Étape 5, le script configure la VM afin qu'elle consulte le réseau en priorité au démarrage (`--boot1 net`). La présence de cette priorité est directement vérifiable dans la GUI VirtualBox (**Configuration > Système > Ordre d'amorçage**).
+Pour l'étape 5, le script configure la VM afin qu'elle consulte le réseau en priorité au démarrage (`--boot1 net`). La présence de cette priorité est directement vérifiable dans la GUI VirtualBox (**Configuration > Système > Ordre d'amorçage**).
 
 **Du côté du serveur TFTP interne de VirtualBox (associé à l'interface NAT) :**
 
