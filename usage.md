@@ -81,7 +81,7 @@ Pour l'Étape 5, le script configure avec succès la VM afin qu'elle consulte le
 
 Cependant, la mise en place du serveur TFTP interne de VirtualBox (associé à l'interface NAT) a nécessité le diagnostic et le contournement de plusieurs obstacles techniques :
 
-- **Évolution de la syntaxe VirtualBox 7+ :** Le CLI ayant été mis à jour par Oracle, il a fallu appliquer la nouvelle nomenclature stricte comportant des tirets (ex: `--nat-enable-tftp1` au lieu des anciennes commandes) pour éviter les erreurs `Unknown option`.
+- **Évolution de la syntaxe VirtualBox 7+ :** Le CLI ayant été mis à jour par Oracle, il a fallu appliquer la nouvelle nomenclature stricte comportant des tirets (ex: `--nat-enable-tftp1` au lieu des anciennes commandes) pour éviter les erreurs `Unknown option`. La VM ne pouvait donc tout simplement pas trouver le dossier TFTP pour boot.
 
   <img width="1109" height="613" alt="Capture d&#39;écran 2026-09-21 133259" src="https://github.com/user-attachments/assets/96a258ee-7928-4203-8197-b301d24ec8ca" />
 
