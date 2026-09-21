@@ -40,6 +40,37 @@ if %ERRORLEVEL% == 0 (
     echo Echec de la creation : La VM %NOM_VM% existe deja.
     exit /B 1
 )
+
+:: ==========================================
+:: AUTOMATISATION DU TELECHARGEMENT TFTP/PXE
+:: ==========================================
+set "TFTPDIR=%USERPROFILE%\.VirtualBox\TFTP"
+set "DEBIAN_BASE=https://deb.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/debian-installer/amd64"
+
+echo Preparation du dossier TFTP dans %TFTPDIR%...
+if not exist "%TFTPDIR%" mkdir "%TFTPDIR%"
+if not exist "%TFTPDIR%\pxelinux.cfg" mkdir "%TFTPDIR%\pxelinux.cfg"
+
+echo Telechargement des fichiers PXE requis (patientez)...
+:: Le "if not exist" permet de ne pas retélécharger si le fichier est déjà là
+if not exist "%TFTPDIR%\pxelinux.0" curl -# -L -o "%TFTPDIR%\pxelinux.0" "%DEBIAN_BASE%/pxelinux.0"
+if not exist "%TFTPDIR%\ldlinux.c32" curl -# -L -o "%TFTPDIR%\ldlinux.c32" "%DEBIAN_BASE%/boot-screens/ldlinux.c32"
+if not exist "%TFTPDIR%\vmlinuz" curl -# -L -o "%TFTPDIR%\vmlinuz" "%DEBIAN_BASE%/linux"
+if not exist "%TFTPDIR%\initrd.gz" curl -# -L -o "%TFTPDIR%\initrd.gz" "%DEBIAN_BASE%/initrd.gz"
+
+echo Creation du fichier pxelinux.cfg\default...
+(
+    echo DEFAULT debian
+    echo PROMPT 1
+    echo TIMEOUT 50
+    echo.
+    echo LABEL debian
+    echo     MENU LABEL Installer Debian PXE
+    echo     KERNEL vmlinuz
+    echo     APPEND initrd=initrd.gz
+) > "%TFTPDIR%\pxelinux.cfg\default"
+:: ==========================================
+
 echo Creation de la VM %NOM_VM%...
 VBoxManage createvm --name %NOM_VM% --ostype Debian_64 --register
 VBoxManage modifyvm %NOM_VM% --memory %RAM% --nic1 nat
@@ -58,8 +89,9 @@ VBoxManage modifyvm %NOM_VM% --nat-tftp-file1 pxelinux.0
 VBoxManage modifyvm %NOM_VM% --nat-tftp-server1 10.0.2.2
 VBoxManage modifyvm %NOM_VM% --nat-enable-tftp1 on
 
-echo VM %NOM_VM% creee avec succes.
+echo VM %NOM_VM% creee avec succes et prete pour le boot reseau !
 goto :eof
+
 :demarrer
 echo Demarrage de la VM %NOM_VM%...
 VBoxManage startvm %NOM_VM%
