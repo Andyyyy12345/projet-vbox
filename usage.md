@@ -93,7 +93,20 @@ Cependant, la mise en place du serveur TFTP interne de VirtualBox (associé à l
   
 - **Sensibilité du parsing de l'antislash final :** L'ajout d'un antislash à la fin du chemin du préfixe TFTP (`--nat-tftp-prefix1`) générait un double slash interne corrompant l'accès aux fichiers. La valeur a dû être formatée sans slash terminal (ex: `%USERPROFILE%\.VirtualBox\TFTP`).
   
-- **Dépendances de l'amorceur réseau (Syslinux) :** Le protocole TFTP ne permet pas d'amorcer directement un fichier `.iso`. Après l'obtention du premier fichier (`pxelinux.0`), l'amorceur bloquait sur l'absence du module `ldlinux.c32`. Il a fallu déployer l'arborescence *Netboot* complète de Debian (`pxelinux.0`, `ldlinux.c32`, le noyau `vmlinuz`, l'image `initrd.gz` ainsi que le dossier de configuration `pxelinux.cfg`) pour permettre le chargement de l'installateur.
+- **Dépendances et automatisation de l'amorceur réseau (Syslinux) :** Le protocole TFTP ne permet pas d'amorcer directement un fichier .iso. Après l'obtention du premier fichier (pxelinux.0), l'amorceur bloquait sur l'absence du module système ldlinux.c32.
+Pour rendre le script 100% autonome, la version 5 du script intègre désormais un bloc de vérification et de téléchargement automatique via curl directement vers l'arborescence officielle de Debian (deb.debian.org). Il récupère automatiquement :
+
+  **L'amorceur :** pxelinux.0
+
+  **Le module système indispensable :** ldlinux.c32
+
+  **Le noyau Linux :** vmlinuz
+
+  **L'image de démarrage :** initrd.gz
+
+  De plus, le dossier pxelinux.cfg et son fichier de configuration default sont générés dynamiquement par le script si absents.
+
+  Voici ce qu'il arrive quand nous avons eu un fichier manquant : 
 
   <img width="1123" height="561" alt="a7a1c654-a36a-4c5f-95c3-01db514a28e3" src="https://github.com/user-attachments/assets/a24d2f18-f5a1-4c81-86f1-097c8c10ede2" />
 
