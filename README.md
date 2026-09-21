@@ -1,4 +1,4 @@
-# SAÉ 51 — Automatisation VirtualBox
+# SAÉ 51 - Automatisation VirtualBox
 
 Bienvenue sur le dépôt du projet.
 
