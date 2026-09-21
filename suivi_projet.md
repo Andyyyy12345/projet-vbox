@@ -17,23 +17,7 @@
 
 ## Séance n° 2
 
-* date - heure
-* Travail effectué
-* A faire à la prochaine séance
-* Difficultés rencontrées
-* Remarques sur la séances (membre absent, pbe technique, ...)
-
-
-## Séance n° 3
-
-* date - heure
-* Travail effectué
-* A faire à la prochaine séance
-* Difficultés rencontrées
-* Remarques sur la séances (membre absent, pbe technique, ...)
-
-
-
-...
-
-
+* 21/09/2026 - 13h-15h20
+* Travail effectué : Correction du code genmv_5.bat, rédaction du rapport dans usage.md, importation des fichiers manquants concernant le boot de la VM
+* Difficultés rencontrées : Chercher d'où provenait le probleme du boot --> finalement résolu !
+* Remarques sur la séances (membre absent, pbe technique, ...) : aucune
