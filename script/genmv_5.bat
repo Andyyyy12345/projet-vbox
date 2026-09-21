@@ -51,16 +51,15 @@ VBoxManage storageattach %NOM_VM% --storagectl "SATA" --port 0 --device 0 --type
 VBoxManage setextradata %NOM_VM% "CreationDate" "%DATE% %TIME%"
 VBoxManage setextradata %NOM_VM% "Creator" "%USERNAME%"
 
-:: Configuration TFTP PXE (V5)
+:: Configuration TFTP PXE (V5) pour VirtualBox 7+
 VBoxManage modifyvm %NOM_VM% --boot1 net
-VBoxManage modifyvm %NOM_VM% --nattftpprefix1 "C:\TFTP\"
-VBoxManage modifyvm %NOM_VM% --nattftpfile1 "pxelinux.0"
-:: Ligne clé qui force EnableTFTP à 1 sous Windows :
-VBoxManage modifyvm %NOM_VM% --nattftpbootdrive1 1
+VBoxManage modifyvm %NOM_VM% --nat-tftp-prefix1 "%USERPROFILE%\.VirtualBox\TFTP"
+VBoxManage modifyvm %NOM_VM% --nat-tftp-file1 pxelinux.0
+VBoxManage modifyvm %NOM_VM% --nat-tftp-server1 10.0.2.2
+VBoxManage modifyvm %NOM_VM% --nat-enable-tftp1 on
 
 echo VM %NOM_VM% creee avec succes.
 goto :eof
-
 :demarrer
 echo Demarrage de la VM %NOM_VM%...
 VBoxManage startvm %NOM_VM%
