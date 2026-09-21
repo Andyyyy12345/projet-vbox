@@ -82,12 +82,23 @@ Pour l'Étape 5, le script configure avec succès la VM afin qu'elle consulte le
 Cependant, la mise en place du serveur TFTP interne de VirtualBox (associé à l'interface NAT) a nécessité le diagnostic et le contournement de plusieurs obstacles techniques :
 
 - **Évolution de la syntaxe VirtualBox 7+ :** Le CLI ayant été mis à jour par Oracle, il a fallu appliquer la nouvelle nomenclature stricte comportant des tirets (ex: `--nat-enable-tftp1` au lieu des anciennes commandes) pour éviter les erreurs `Unknown option`.
+
+  <img width="1109" height="613" alt="Capture d&#39;écran 2026-09-21 133259" src="https://github.com/user-attachments/assets/96a258ee-7928-4203-8197-b301d24ec8ca" />
+
   
 - **Routage du serveur TFTP :** Par défaut, le firmware iPXE tentait de joindre le réseau *Host-Only* (`192.168.56.1`), ce qui provoquait une expiration du délai de connexion (`Connection timed out`). Il a été nécessaire de forcer l'adresse de la passerelle NAT via la directive `--nat-tftp-server1 10.0.2.2`.
+
+  <img width="1197" height="596" alt="21ac56e6-b2c6-4175-94b5-4f3126688d95" src="https://github.com/user-attachments/assets/d0b6c2e9-fdd8-4682-89b3-75cc9c25408a" />
+
   
 - **Sensibilité du parsing de l'antislash final :** L'ajout d'un antislash à la fin du chemin du préfixe TFTP (`--nat-tftp-prefix1`) générait un double slash interne corrompant l'accès aux fichiers. La valeur a dû être formatée sans slash terminal (ex: `%USERPROFILE%\.VirtualBox\TFTP`).
   
 - **Dépendances de l'amorceur réseau (Syslinux) :** Le protocole TFTP ne permet pas d'amorcer directement un fichier `.iso`. Après l'obtention du premier fichier (`pxelinux.0`), l'amorceur bloquait sur l'absence du module `ldlinux.c32`. Il a fallu déployer l'arborescence *Netboot* complète de Debian (`pxelinux.0`, `ldlinux.c32`, le noyau `vmlinuz`, l'image `initrd.gz` ainsi que le dossier de configuration `pxelinux.cfg`) pour permettre le chargement de l'installateur.
+
+  <img width="1123" height="561" alt="a7a1c654-a36a-4c5f-95c3-01db514a28e3" src="https://github.com/user-attachments/assets/a24d2f18-f5a1-4c81-86f1-097c8c10ede2" />
+
+
+  
 
 ## Fonctionnalités supplémentaires (Partie optionnelle)
 ### 1. Login automatique (Auto-logon)
