@@ -5,7 +5,7 @@
 - **Établissement :** IUT de Rouen Site d'Elbeuf - Réseaux & Télécoms (BUT3)
 
 ## Résumé
-Ce document présente le fonctionnement d'une suite de scripts Batch Windows (de `genmv_1.bat` à `genmv_5.bat`) conçus pour automatiser la gestion de machines virtuelles sous VirtualBox via `VBoxManage`. Il détaille la syntaxe des commandes, l'évolution de la structure globale du projet, les métadonnées injectées et le paramétrage du boot réseau PXE (que nous n'avons malheuresement pas réussi à réaliser). Une section dédiée analyse l'architecture mise en place, les contraintes techniques liées à l'environnement hôte Windows ainsi que les évolutions possibles pour la maquette.
+Ce document présente le fonctionnement d'une suite de scripts Batch Windows (de `genmv_1.bat` à `genmv_5.bat`) conçus pour automatiser la gestion de machines virtuelles sous VirtualBox via `VBoxManage`. Il détaille la syntaxe des commandes, l'évolution de la structure globale du projet, les métadonnées injectées et le paramétrage du boot réseau PXE. Une section dédiée analyse l'architecture mise en place, les contraintes techniques liées à l'environnement hôte Windows ainsi que les évolutions possibles pour la maquette.
 
 ---
 
@@ -76,19 +76,18 @@ L'outil VBoxManage.exe n'étant pas toujours inscrit dans la variable d'environn
 ```cmd
 set "PATH=%PATH%;C:\Program Files\Oracle\VirtualBox"
 ```
-### 2. Implémentation du boot réseau PXE et limites du serveur TFTP interne
-Pour l'étape 5, le script configure la VM afin qu'elle consulte le réseau en priorité au démarrage (`--boot1 net`). La présence de cette priorité est directement vérifiable dans la GUI VirtualBox (**Configuration > Système > Ordre d'amorçage**).
+### 2. Implémentation du boot réseau PXE et résolution des instabilités TFTP
+Pour l'Étape 5, le script configure avec succès la VM afin qu'elle consulte le réseau en priorité au démarrage (`--boot1 net`). La machine virtuelle démarre effectivement sur l'installateur réseau de Debian via le PXE.
 
-**Du côté du serveur TFTP interne de VirtualBox (associé à l'interface NAT) :**
+Cependant, la mise en place du serveur TFTP interne de VirtualBox (associé à l'interface NAT) a nécessité le diagnostic et le contournement de plusieurs obstacles techniques :
 
-- **Démarche théorique :** Les fichiers d'amorçage réseau (`pxelinux.0`, `vmlinuz` et `initrd.gz`) extraits de l'ISO Debian netinst ainsi que le dossier de configuration `pxelinux.cfg/default` ont été positionnés dans le répertoire par défaut du profil utilisateur `%USERPROFILE%\.VirtualBox\TFTP\`. Le script pointe dynamiquement sur ce dossier via la directive `nattftpprefix1`.
-
-- **Limite technique identifiée :** Sous environnement hôte Windows, le moteur C++ interne du service TFTP NAT de VirtualBox présente des instabilités majeures et échoue à initialiser la distribution des fichiers d'amorçage. Malgré la configuration explicite des directives `nattftpprefix1`, `nattftpfile1` et `nattftpbootdrive1 1`, le sous-système VirtualBox renvoie systématiquement la valeur `EnableTFTP = 0x0` dans ses journaux d'exécution (`VBox.log`), provoquant l'échec `Nothing to boot` côté iPXE (voir capture d'écran).
-
-    <img width="551" height="90" alt="image" src="https://github.com/user-attachments/assets/984d1f19-f552-4f75-8f1a-d60460654c9e" />
-
-
-- **Piste de résolution / Alternative :** Dans un environnement de production ou lors d'un déploiement sous Windows, l'attachement direct de l'ISO sur le contrôleur DVD virtuel (`--boot1 dvd`) ou le déploiement d'un serveur TFTP/DHCP tiers sur un réseau interne dédié (`Intnet`) constituent les alternatives préconisées.
+- **Évolution de la syntaxe VirtualBox 7+ :** Le CLI ayant été mis à jour par Oracle, il a fallu appliquer la nouvelle nomenclature stricte comportant des tirets (ex: `--nat-enable-tftp1` au lieu des anciennes commandes) pour éviter les erreurs `Unknown option`.
+  
+- **Routage du serveur TFTP :** Par défaut, le firmware iPXE tentait de joindre le réseau *Host-Only* (`192.168.56.1`), ce qui provoquait une expiration du délai de connexion (`Connection timed out`). Il a été nécessaire de forcer l'adresse de la passerelle NAT via la directive `--nat-tftp-server1 10.0.2.2`.
+  
+- **Sensibilité du parsing de l'antislash final :** L'ajout d'un antislash à la fin du chemin du préfixe TFTP (`--nat-tftp-prefix1`) générait un double slash interne corrompant l'accès aux fichiers. La valeur a dû être formatée sans slash terminal (ex: `%USERPROFILE%\.VirtualBox\TFTP`).
+  
+- **Dépendances de l'amorceur réseau (Syslinux) :** Le protocole TFTP ne permet pas d'amorcer directement un fichier `.iso`. Après l'obtention du premier fichier (`pxelinux.0`), l'amorceur bloquait sur l'absence du module `ldlinux.c32`. Il a fallu déployer l'arborescence *Netboot* complète de Debian (`pxelinux.0`, `ldlinux.c32`, le noyau `vmlinuz`, l'image `initrd.gz` ainsi que le dossier de configuration `pxelinux.cfg`) pour permettre le chargement de l'installateur.
 
 ## Fonctionnalités supplémentaires (Partie optionnelle)
 ### 1. Login automatique (Auto-logon)
